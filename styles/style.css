@@ -1,0 +1,372 @@
+*, *::after, *::before{
+    box-sizing: border-box;
+    margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+	/*border: 1px solid lightgoldenrodyellow;*/
+}
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+html, body{
+	height: 100%;
+	width: 100%;
+	max-width: 100%;
+    overflow-x: hidden;
+}
+
+body{
+	background-color: #96CEB4;
+	font-family: 'Courier New', Courier, monospace;
+	color: #ffffff;
+}
+
+header{
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	color: #ffffff;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+h1{
+	font-size: large;
+}
+
+header div{
+	margin: 1px;
+}
+
+header h1{
+	margin: 30px 0px;
+}
+
+header ion-icon{
+	position: absolute;
+	left: 20px;
+}
+
+header ion-icon:hover{
+	cursor: pointer;
+}
+
+#main-content{
+	width: 100%;
+	height: fit-content;
+	padding: 15px 0px;
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+}
+
+.first-page-element-wrapper{
+	width: 200px;
+	height: fit-content;
+	display: flex;
+	flex-direction: column;
+	margin: 20px 0px;
+	justify-content: center;
+	align-items: center;
+}
+
+.first-page-element-wrapper img{
+	width: 42px;
+}
+.first-page-element-wrapper img:hover{
+	cursor: pointer;
+}
+
+.profile-form-container{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: #ffffff;
+	color: #000000;
+	flex-direction: column;
+	box-shadow: -5px 5px 5px rgba(69, 69, 69, 0.502);
+}
+
+.profile-title-container{
+	height: fit-content;
+	border-bottom: 2px solid gray;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 15px 0;
+}
+
+.profile-fields-container{
+	padding: 15px 10px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}
+
+.profile-input-field-wrapper{
+	margin: 10px 0;
+	display: flex;
+	flex-direction: column;
+}
+
+.profile-input-field-text{
+	margin-bottom: 5px;
+}
+
+.instagram-handle-container{
+	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.profile-input-at-symbol{
+	position: absolute;
+	left: 2px;
+}
+
+input{
+	border: 1px solid black;
+	padding: 5px 0 5px 5px;
+}
+
+.profile-fields-action-button{
+	border: 1px solid black;
+	padding: 5px;
+	margin-top: 5px;
+	transition: all 300ms linear;
+	background-color: #ffffff;
+	color: #000000;
+}
+
+.profile-fields-action-button:hover{
+	box-shadow: -2px 2px 5px rgb(69, 69, 69);
+	cursor: pointer;
+}
+
+.change-auth-operation{
+	margin-top: 30px;
+	font-size: smaller;
+	padding: 5px;
+}
+
+.change-auth-operation span{
+}
+.change-auth-operation span:hover{
+	cursor: pointer;
+	text-decoration: underline;
+}
+
+.profile-photo-wrapper{
+	width: 150px;
+	height: 150px;
+	border-radius: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background: linear-gradient(to right, #FFEEAD 15%, #D9534F 70%, #FFAD60 15%);
+	position: relative;
+}
+
+.profile-photo-wrapper img{
+	width: 95%;
+	height: 95%;
+	border-radius: 100%;
+	object-fit: cover;
+	z-index: 2;
+}
+
+.profile-photo-wrapper div{
+	width: 100%;
+	height: 100%;
+	border-radius: 100%;
+	background: linear-gradient(to right, #FFEEAD 15%, #D9534F 70%, #FFAD60 15%);
+	z-index: 1;
+	position: absolute;
+	display: flex;
+}
+
+.profile-data-wrapper{
+	margin: 15px 0;
+	display: flex;
+	width: 100%;
+	padding: 10px 20px;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.profile-data-wrapper ion-icon{
+	margin-right: 5px;
+	color: #D9534F;
+}
+
+.profile-data-wrapper div{
+	margin: 5px 0;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+
+
+#loading-spinner{
+	margin: 15px auto;
+	animation: spin 4s linear infinite;
+	border-top: 3px solid #D9534F;
+	width: 150px;
+	height: 150px;
+	border-radius: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	color: #ffffff;
+	font-weight: 600;
+	position: relative;
+}
+#loading-spinner #subspinner-1{
+	border-right: 3px solid #FFAD60;
+	height: 95%;
+	width: 95%;
+	border-radius: 100%;
+	position: absolute;
+}
+#loading-spinner #subspinner-2{
+	border-bottom: 3px solid #FFEEAD;
+	height: 90%;
+	width: 90%;
+	border-radius: 100%;
+	position: absolute;
+}
+
+@-moz-keyframes spin { 
+    100% { -moz-transform: rotate(360deg); } 
+}
+@-webkit-keyframes spin { 
+    100% { -webkit-transform: rotate(360deg); } 
+}
+@keyframes spin { 
+    100% { 
+        -webkit-transform: rotate(360deg); 
+        transform:rotate(360deg); 
+    } 
+}
+
+.about-text-wrapper{
+	width: 250px;
+	text-align: justify;
+}
+
+.about-text-wrapper span{
+	font-weight: 600;
+}
+
+.about-text-wrapper img{
+	width: 250px;
+	margin: 10px 0;
+}
+
+.add-photo-button{
+	width: 50px;
+	height: 50px;
+	background-color: #D9534F;
+	color: #FFFFFF;
+	font-size: larger;
+	border-radius: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: fixed;
+	right: 15px;
+	bottom: 15px;
+	transition: all 300ms linear;
+	border: 2px solid #FFEEAD;
+	z-index: 3;
+}
+
+.add-photo-button div{
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border: 2px solid #FFAD60;
+	border-radius: 100%;
+}
+
+@media screen and (min-width: 1200px){
+	.add-photo-button:hover{
+		cursor: pointer;
+		box-shadow: 3px 3px 3px gray;
+	}
+}
+
+
+.photos-container{
+	height: fit-content;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}
+
+.photos-photo-wrapper{
+	width: 200px;
+	height: 275px;
+	border: 10px solid #FFFFFF;
+	margin: 15px 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	box-shadow: -1px 1px 5px #B0B0B0;
+	transition: all 300ms linear;
+}
+
+.photos-photo-wrapper:hover{
+	box-shadow: -3px 3px 5px #989898;
+}
+
+.photos-photo-wrapper img{
+	width: 180px;
+	height: 180px;
+	object-fit: cover;
+}
+
+.photos-photo-wrapper div{
+	width: 180px;
+	height: 75px;
+	background-color: #FFFFFF;
+	font-family: 'Cedarville Cursive', cursive;
+	display: flex;
+	flex-direction: column;
+	color:#000000;
+	font-size: small;
+	padding-top: 15px;
+}
