@@ -6,6 +6,7 @@ let userID = "";
 onAuthStateChanged(auth, (user) => {
     document.getElementById("main-content").innerHTML = "";
     document.getElementById("loading-spinner").style.display = "flex";
+    renderSortByButton();
     if (user) {
         userID = user.uid;
         console.log("user is logged in!");
@@ -15,6 +16,43 @@ onAuthStateChanged(auth, (user) => {
         console.log("user is not logged in!");
     }
 });
+
+const renderSortByButton = () => {
+    const sortByContainer = document.createElement("div");
+    sortByContainer.classList.add("photos-sort-by-container");
+
+    const sortByButton = document.createElement("div");
+    sortByButton.classList.add("sort-by-button");
+    const sortByIcon = document.createElement("ion-icon");
+    sortByIcon.setAttribute("name", "caret-down-outline");
+    sortByButton.innerHTML = `
+        <span> Sort by </span>
+    `;
+    sortByButton.appendChild(sortByIcon);
+
+    const sortByDropdown = document.createElement("div");
+    sortByDropdown.classList.add("sort-by-dropdown");
+    sortByDropdown.innerHTML = `
+        <div>Popularity</div>
+        <div>Oldest</div>
+        <div>Newest</div>
+    `;
+
+    sortByButton.addEventListener("click", ()=>{
+        if(sortByIcon.getAttribute("name") == "caret-down-outline"){
+            sortByIcon.setAttribute("name", "caret-up-outline");
+            sortByDropdown.style.display = "flex";
+        }else{
+            sortByIcon.setAttribute("name", "caret-down-outline");
+            sortByDropdown.style.display = "none";
+        }
+    });
+    
+    
+    sortByContainer.appendChild(sortByButton);
+    sortByContainer.appendChild(sortByDropdown);
+    document.getElementById("main-content").appendChild(sortByContainer);
+}
 
 const renderPhotos = () =>{
 
@@ -33,9 +71,19 @@ const renderPhotos = () =>{
             <span>@matjazsimonic</span>
         `;  
 
+        const heartIcon = document.createElement("ion-icon");
+        heartIcon.setAttribute("name","heart-outline");
+        heartIcon.addEventListener("click", ()=>{
+            if(heartIcon.getAttribute("name") == "heart-outline"){
+                heartIcon.setAttribute("name","heart");
+            }else{
+                heartIcon.setAttribute("name","heart-outline");
+            }
+        })
 
         photoWrapper.appendChild(photo);
         photoWrapper.appendChild(photoInfo);
+        photoWrapper.appendChild(heartIcon);
         photosContainer.appendChild(photoWrapper);
     }
 
