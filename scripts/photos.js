@@ -2,6 +2,7 @@ import {auth, db, storage} from './firebase.js';
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.9.1/firebase-auth.js";
 
 let userID = "";
+let sortByOption = "Newest";
 
 onAuthStateChanged(auth, (user) => {
     document.getElementById("main-content").innerHTML = "";
@@ -9,13 +10,22 @@ onAuthStateChanged(auth, (user) => {
     renderSortByButton();
     if (user) {
         userID = user.uid;
-        console.log("user is logged in!");
         renderAddPhotoButton();
     } else {
         renderPhotos();
-        console.log("user is not logged in!");
     }
 });
+
+const rerenderPage = () => {
+    document.getElementById("main-content").innerHTML = "";
+    document.getElementById("loading-spinner").style.display = "flex";
+    renderSortByButton();
+    if(userID !== ""){
+        renderAddPhotoButton();
+    }else{
+        renderPhotos();
+    }
+}
 
 const renderSortByButton = () => {
     const sortByContainer = document.createElement("div");
@@ -32,11 +42,47 @@ const renderSortByButton = () => {
 
     const sortByDropdown = document.createElement("div");
     sortByDropdown.classList.add("sort-by-dropdown");
-    sortByDropdown.innerHTML = `
-        <div>Popularity</div>
-        <div>Oldest</div>
-        <div>Newest</div>
-    `;
+    const popularityButton = document.createElement("div");
+        popularityButton.innerText = "Popularity";
+        popularityButton.addEventListener("click", ()=>{
+            sortByOption = "Popular";
+            rerenderPage();
+        });
+    const oldestButton = document.createElement("div");
+        oldestButton.innerText = "Oldest";
+        oldestButton.addEventListener("click", ()=>{
+            sortByOption = "Oldest";
+            rerenderPage();
+        });
+    const newestButton = document.createElement("div");
+        newestButton.innerText = "Newest";
+        newestButton.addEventListener("click", ()=>{
+            sortByOption = "Newest";
+            rerenderPage();
+        });
+    /*switch(sortByOption){
+        case "Newest":
+            newestButton.innerHTML += '<ion-icon name="checkmark-outline"></ion-icon>';
+            break;
+        case "Oldest":
+            oldestButton.innerHTML += '<ion-icon name="checkmark-outline"></ion-icon>';
+            break;
+        case "Popular":
+            popularityButton.innerHTML += '<ion-icon name="checkmark-outline"></ion-icon>';
+            break;
+        default: break;
+    }
+    */
+   if(sortByOption === "Newest"){
+        newestButton.innerHTML += '<ion-icon name="checkmark-outline"></ion-icon>';
+   }else if(sortByOption === "Oldest"){
+        oldestButton.innerHTML += '<ion-icon name="checkmark-outline"></ion-icon>';
+   }else{
+        popularityButton.innerHTML += '<ion-icon name="checkmark-outline"></ion-icon>';
+   }
+    sortByDropdown.appendChild(popularityButton);
+    sortByDropdown.appendChild(oldestButton);
+    sortByDropdown.appendChild(newestButton);
 
     sortByButton.addEventListener("click", ()=>{
         if(sortByIcon.getAttribute("name") == "caret-down-outline"){

@@ -5,7 +5,6 @@ title.innerText = pageTitle.toUpperCase();
 
 const header = document.getElementById("header");
 header.appendChild(title);
-console.log("title: ", pageTitle);
 
 const backArrow = document.createElement("ion-icon");
 backArrow.setAttribute("name", "arrow-back-outline");
