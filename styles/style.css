@@ -483,8 +483,7 @@ input{
 
 .add-photo-alert{
 	font-size: xx-small;
-	position: absolute;
-	bottom: 20px;
+	margin-top: 30px;
 }
 
 .add-photo-alert i{
@@ -504,7 +503,7 @@ input{
 .checkbox-wrapper{
 	width: 200px;
 	top: 100%;
-	display: flex;
+	display: none;
 	flex-direction: row;
 	align-items: center;
 	justify-content: flex-start;
@@ -546,3 +545,73 @@ input{
 	z-index: 5;
 }
 
+.add-photo-image-picker-wrapper{
+	width: 200px;
+	height: 270px;
+	border: 10px solid #FFFFFF;
+	background-color: #FFFFFF;
+	position: relative;
+}
+
+.add-photo-preview-image{
+	width: 180px;
+	height: 180px;
+	background-color: #96CEB4;
+	object-fit: cover;
+}
+
+.add-photo-preview-image-description{
+	width: 180px;
+	height: 70px;
+	background-color: #FFFFFF;
+	color: #000000;
+	font-family: 'Cedarville Cursive', cursive;
+	padding-top: 5px;
+	font-size: 10px;
+	display: flex;
+	flex-direction: column;
+}
+
+.add-photo-preview-image-description span{
+	margin: 4px 0;
+}
+
+.add-photo-pick-image-button{
+	width: 180px;
+	height: 180px;
+	position: absolute;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	z-index: 5;
+}
+
+.add-photo-pick-image-button ion-icon{
+	background-color: #D9534F;
+	padding: 10px;
+	border-radius: 100%;
+	transition: all 500ms linear;
+	border: 2px solid #FFEEAD;
+}
+
+.add-photo-pick-image-button ion-icon:hover{
+	box-shadow: 5px 5px 5px #989898;
+	cursor: pointer;
+}
+
+.add-photo-submit-button{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: small;
+	background-color: #D9534F;
+	padding: 8px 16px;
+	margin-top: 20px;
+	border: 2px solid #FFEEAD;
+	transition: all 500ms linear;
+}	
+
+.add-photo-submit-button:hover{
+	cursor: pointer;
+	box-shadow: 5px 5px 5px #989898;
+}
