@@ -352,6 +352,7 @@ input{
 	transition: all 300ms linear;
 	background-color: #FFFFFF;
 	position: relative;
+	/*filter: grayscale();*/
 }
 
 .photos-photo-wrapper:hover{
@@ -372,12 +373,12 @@ input{
 	display: flex;
 	flex-direction: column;
 	color:#000000;
-	font-size: small;
-	padding-top: 10px;
+	font-size: 10px;
+	padding-top: 7px;
 }
 
 .photos-photo-wrapper span{
-	margin: 2px 0;
+	margin: 3px 0;
 }
 
 .photos-photo-wrapper ion-icon{

@@ -1,8 +1,10 @@
 import {auth, db, storage} from './firebase.js';
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.9.1/firebase-auth.js";
+import {collection, getDocs} from "https://www.gstatic.com/firebasejs/9.9.1/firebase-firestore.js";
 
 let userID = "";
 let sortByOption = "Newest";
+let allPhotos = [];
 
 onAuthStateChanged(auth, (user) => {
     document.getElementById("main-content").innerHTML = "";
@@ -12,9 +14,58 @@ onAuthStateChanged(auth, (user) => {
         userID = user.uid;
         renderAddPhotoButton();
     } else {
-        renderPhotos();
+    
     }
+    getAllPhotos();
 });
+
+const sortByNewest = () => {
+    allPhotos.sort((a, b)=>{
+        if(a.timeUploaded > b.timeUploaded){
+            return -1;
+        }
+        if(a.timeUploaded < b.timeUploaded){
+            return 1;
+        }
+        return 0;
+    });
+    rerenderPage();
+}
+
+const sortByOldest = () => {
+    allPhotos.sort((a, b)=>{
+        if(a.timeUploaded < b.timeUploaded){
+            return -1;
+        }
+        if(a.timeUploaded > b.timeUploaded){
+            return 1;
+        }
+        return 0;
+    });
+    rerenderPage();
+}
+
+const sortByPopularity = () => {
+    allPhotos.sort((a, b)=>{
+        if(a.numberOfLikes > b.numberOfLikes){
+            return -1;
+        }
+        if(a.numberOfLikes < b.numberOfLikes){
+            return 1;
+        }
+        return 0;
+    });
+    rerenderPage();
+}
+
+const getAllPhotos = async() => {
+    const querySnapshot = await getDocs(collection(db, "photoData"));
+    querySnapshot.forEach((doc) => {
+        allPhotos.push(doc.data());
+    });
+    sortByNewest();
+    //renderPhotos();
+}
 
 const rerenderPage = () => {
     document.getElementById("main-content").innerHTML = "";
@@ -46,19 +97,19 @@ const renderSortByButton = () => {
         popularityButton.innerText = "Popularity";
         popularityButton.addEventListener("click", ()=>{
             sortByOption = "Popular";
-            rerenderPage();
+            sortByPopularity();
         });
     const oldestButton = document.createElement("div");
         oldestButton.innerText = "Oldest";
         oldestButton.addEventListener("click", ()=>{
             sortByOption = "Oldest";
-            rerenderPage();
+            sortByOldest();
         });
     const newestButton = document.createElement("div");
         newestButton.innerText = "Newest";
         newestButton.addEventListener("click", ()=>{
             sortByOption = "Newest";
-            rerenderPage();
+            sortByNewest();
         });
     /*switch(sortByOption){
         case "Newest":
@@ -101,19 +152,21 @@ const renderSortByButton = () => {
 }
 
 const renderPhotos = () =>{
-
+    
     const photosContainer = document.createElement("div");
+    photosContainer.setAttribute("id", "photos-container");
     photosContainer.classList.add("photos-container");
-    for(let i = 0; i < 10; i++){
+    allPhotos.forEach((item) => {
         const photoWrapper = document.createElement("div");
         photoWrapper.classList.add("photos-photo-wrapper");
         const photo = document.createElement("img");
         const randomNumber = Math.floor(Math.random() * 500 + 200)
-        photo.setAttribute("src", `https://picsum.photos/${randomNumber}/300?grayscale`);
+        photo.setAttribute("src", `${item.photoURL}`);
         const photoInfo = document.createElement("div");
         photoInfo.innerHTML = `
-            <span>Summer holiday, 22. 7. 2022</span>
-            <span>Contax T2 | Portra 400</span>
+            <span>${item.description}</span>
+            <span>${item.date}</span>
+            <span>${item.camera} | ${item.film}</span>
             <span>@matjazsimonic</span>
         `;  
 
@@ -131,7 +184,7 @@ const renderPhotos = () =>{
         photoWrapper.appendChild(photoInfo);
         photoWrapper.appendChild(heartIcon);
         photosContainer.appendChild(photoWrapper);
-    }
+    });
 
     document.getElementById("loading-spinner").style.display = "none";
     document.getElementById("main-content").appendChild(photosContainer);

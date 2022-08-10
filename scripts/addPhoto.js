@@ -1,6 +1,6 @@
 import {auth, db, storage} from './firebase.js';
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.9.1/firebase-auth.js";
-import {doc, setDoc, getDoc} from "https://www.gstatic.com/firebasejs/9.9.1/firebase-firestore.js";
+import {doc, setDoc, getDoc, addDoc, collection} from "https://www.gstatic.com/firebasejs/9.9.1/firebase-firestore.js";
 import {ref, uploadString, getDownloadURL} from "https://www.gstatic.com/firebasejs/9.9.1/firebase-storage.js";
 
 let userID = "";
@@ -24,21 +24,44 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
+const resetPage = () => {
+    setTimeout(()=>{
+        window.location.reload();
+    }, 2000)
+}
+
+const addPhotoInfo = async(url, time) => {
+    console.log("url: ",url);
+    console.log("time2: ",time);
+    const photoData = {
+        userID: userID,
+        timeUploaded: time,
+        photoURL: url,
+        description: photoInformation["description"] !== "" ? photoInformation["description"] : "Unknown",
+        date: photoInformation["date"] !== "" ? photoInformation["date"] : "Unknown",
+        film: photoInformation["film"] !== "" ? photoInformation["film"] : "Unknown",
+        camera: photoInformation["camera"] !== "" ? photoInformation["camera"] : "Unknown",
+        numberOfLikes: 0,
+    }
+    
+    await setDoc(doc(db, "photoData", time.toString()), photoData);
+
+    resetPage();
+}
+
 const uploadPhoto = (file) =>{
-    /*
-
-        POPRAVI SOTRAGEREF, DODAJ, DA SE IMAGEURL SKUPAJ Z PHOTO INFO ZAPIŠE V NEK DOCUMENT, KATEREGA BO POTEM PHOTOS.JS PREBRAL
-
-    */
-    const storageRef = ref(storage, `/samplePictures/${userID}`);
+    const d = new Date();
+    const time = d.getTime();
+    console.log("time1: ",time);
+    const storageRef = ref(storage, `/uploadedPictures/${time}`);
     uploadString(storageRef, file, 'data_url').then((snapshot) => {
-        console.log('Uploaded a data_url string!');
-    });
-    getDownloadURL(ref(storageRef))
-    .then((url) => {
-
-    }).catch((error) => {
-        console.log(error);
+        console.log('Photo uploaded!');
+        getDownloadURL(ref(storageRef))
+        .then((url) => {
+            addPhotoInfo(url, time);
+        }).catch((error) => {
+            console.log(error);
+        });
     });
 }
 
@@ -52,7 +75,7 @@ const handleFilePicker = () =>{
             readerResult = reader.result;
             document.getElementById("add-photo-preview-image").setAttribute("src", reader.result);
 
-            document.getElementById("add-photo-preview-image").style.filter = "grayscale(100%)";
+            //document.getElementById("add-photo-preview-image").style.filter = "grayscale(100%)";
             console.log("readerResult: ", readerResult);
         }, false);
         if (file) {
