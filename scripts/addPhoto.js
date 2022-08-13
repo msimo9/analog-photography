@@ -12,6 +12,7 @@ let photoInformation = {
 }
 let lens = "";
 let readerResult = undefined;
+let grayscaleValue = false;
 
 onAuthStateChanged(auth, (user) => {
     document.getElementById("main-content").innerHTML = "";
@@ -26,13 +27,12 @@ onAuthStateChanged(auth, (user) => {
 
 const resetPage = () => {
     setTimeout(()=>{
+        document.getElementById("add-photo-loading-div-wrappper").style.display = "none";
         window.location.reload();
-    }, 2000)
+    }, 3000)
 }
 
 const addPhotoInfo = async(url, time) => {
-    console.log("url: ",url);
-    console.log("time2: ",time);
     const photoData = {
         userID: userID,
         timeUploaded: time,
@@ -42,6 +42,7 @@ const addPhotoInfo = async(url, time) => {
         film: photoInformation["film"] !== "" ? photoInformation["film"] : "Unknown",
         camera: photoInformation["camera"] !== "" ? photoInformation["camera"] : "Unknown",
         numberOfLikes: 0,
+        grayscale: grayscaleValue, 
     }
     
     await setDoc(doc(db, "photoData", time.toString()), photoData);
@@ -50,12 +51,12 @@ const addPhotoInfo = async(url, time) => {
 }
 
 const uploadPhoto = (file) =>{
+    window.scrollTo(0, 0);
+    document.getElementById("add-photo-loading-div-wrappper").style.display = "flex";
     const d = new Date();
     const time = d.getTime();
-    console.log("time1: ",time);
     const storageRef = ref(storage, `/uploadedPictures/${time}`);
     uploadString(storageRef, file, 'data_url').then((snapshot) => {
-        console.log('Photo uploaded!');
         getDownloadURL(ref(storageRef))
         .then((url) => {
             addPhotoInfo(url, time);
@@ -74,9 +75,6 @@ const handleFilePicker = () =>{
         reader.addEventListener("load", function () {
             readerResult = reader.result;
             document.getElementById("add-photo-preview-image").setAttribute("src", reader.result);
-
-            //document.getElementById("add-photo-preview-image").style.filter = "grayscale(100%)";
-            console.log("readerResult: ", readerResult);
         }, false);
         if (file) {
             reader.readAsDataURL(file);
@@ -86,6 +84,49 @@ const handleFilePicker = () =>{
 }
 
 const renderInputFields = () => {
+
+    const loadingDivWrapper = document.createElement("div");
+    loadingDivWrapper.setAttribute("id", "add-photo-loading-div-wrappper");
+    loadingDivWrapper.classList.add("add-photo-loading-div-wrappper");
+    loadingDivWrapper.innerHTML = "<span>UPLOADING</span>"
+    const loadingDivBar = document.createElement("div");
+    loadingDivBar.classList.add("add-photo-loading-div-bar");
+    loadingDivBar.addEventListener("click", ()=>{
+        const barBackgroundColor = loadingDivBar.style.backgroundColor;
+        if(barBackgroundColor == "rgb(217, 83, 79)"){
+            loadingDivBar.style.backgroundColor = "#FFAD60";
+        }else{
+            loadingDivBar.style.backgroundColor = "#D9534F";
+        }
+    });
+    let screenWidth = screen.width;
+    let i = 0;
+    let direction = "right";
+    loadingDivBar.style.left = i+"px";
+    const moveBar = () => {
+        setTimeout(()=>{
+            loadingDivBar.style.left = i+"px";
+            if(direction === "right"){
+                i++;
+            }else{
+                i--;
+            }
+            
+            if(i > 450 || i < 0){
+                if(direction === "right"){
+                    direction = "left";
+                }else{
+                    direction = "right";
+                }
+            }
+            moveBar();
+        }, 3);
+    }
+
+    moveBar();
+        
+    loadingDivWrapper.appendChild(loadingDivBar);
+    document.getElementById("main-content").appendChild(loadingDivWrapper);
 
     const previewImageWrapper = document.createElement("div");
     previewImageWrapper.classList.add("add-photo-image-picker-wrapper");
@@ -128,6 +169,33 @@ const renderInputFields = () => {
 
     previewImageWrapper.appendChild(previewImage);
     previewImageWrapper.appendChild(previewImageDescription);
+
+    const toggleSwitchWrapper = document.createElement("div");
+    toggleSwitchWrapper.innerHTML += `
+        <span style="margin-right: 2px;">Grayscale?</span>
+    `;
+    const toggleSwitchContainer = document.createElement("label");
+    const toggleSwitch = document.createElement("input");
+    const toggleSwitchText = document.createElement("span");
+
+    toggleSwitchWrapper.classList.add("toggle-switch-wrapper")
+    toggleSwitchContainer.classList.add("toggleSwitch");
+    toggleSwitchText.classList.add("toggleSlider");
+    toggleSwitch.setAttribute("type", "checkbox");
+    toggleSwitch.addEventListener("change", ()=>{
+        if(toggleSwitch.checked){
+            document.getElementById("add-photo-preview-image").style.filter = "grayscale(100%)";
+            grayscaleValue = true;
+        }else{
+            document.getElementById("add-photo-preview-image").style.filter = "none";
+            grayscaleValue = false;
+        }
+    });
+
+    toggleSwitchContainer.appendChild(toggleSwitch);
+    toggleSwitchContainer.appendChild(toggleSwitchText);
+    toggleSwitchWrapper.appendChild(toggleSwitchContainer);
+    document.getElementById("main-content").appendChild(toggleSwitchWrapper);
 
     document.getElementById("main-content").appendChild(previewImageWrapper);
 
@@ -244,6 +312,7 @@ const renderInputFields = () => {
     `;
     submitButton.addEventListener("click", ()=>{
         uploadPhoto(readerResult);
+        window.scrollTo(0,0);
     });
     document.getElementById("main-content").appendChild(submitButton);
     

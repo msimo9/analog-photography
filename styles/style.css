@@ -31,12 +31,8 @@ table {
 	border-spacing: 0;
 }
 
-html, body{
-	height: 100%;
-	width: 100%;
-	max-width: 100%;
-    overflow-x: hidden;
-}
+html { height: 100%; overflow:auto; }
+body { height: 100%; }
 
 body{
 	background-color: #96CEB4;
@@ -339,11 +335,48 @@ input{
 	flex-direction: column;
 }
 
+.three-dots-container{
+	width: 200px;
+	display: flex;
+	justify-content: flex-end;
+	font-size: 10px;
+	position: relative;
+}
+
+.three-dots-container ion-icon:hover{
+	cursor: pointer;
+}
+
+.three-dots-submenu{
+	position: absolute;
+	width: 100px;
+	right: -110px;
+	color: #000000;
+	display: none;
+	background-color: #ffffff;
+	flex-direction: column;
+}
+
+.three-dots-submenu div{
+	height: 30px;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border: 1px solid #000000;
+}
+
+.three-dots-submenu div:hover{
+	cursor: pointer;
+	font-weight: 600;
+	color: #D9534F;
+}
+
 .photos-photo-wrapper{
 	width: 200px;
 	height: 275px;
 	border: 10px solid #FFFFFF;
-	margin: 15px 0;
+	margin: 0 0 15px 0;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -365,7 +398,7 @@ input{
 	object-fit: cover;
 }
 
-.photos-photo-wrapper div{
+.photo-information{
 	width: 180px;
 	height: 75px;
 	background-color: #FFFFFF;
@@ -381,15 +414,26 @@ input{
 	margin: 3px 0;
 }
 
-.photos-photo-wrapper ion-icon{
+.heart-icon-wrapper{
 	position: absolute;
-	right: 2px;
-	bottom: 2px;
+	right: 1px;
+	bottom: 1px;
 	color: #000000;
-	font-size: smaller;
+	font-size: 8px;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
 }
 
-.photos-photo-wrapper ion-icon:hover{
+.heart-icon-wrapper span{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.heart-icon-wrapper ion-icon:hover{
 	cursor: pointer;
 }
 
@@ -616,3 +660,105 @@ input{
 	cursor: pointer;
 	box-shadow: 5px 5px 5px #989898;
 }
+
+.toggle-switch-wrapper{
+	width: 200px;
+	display: flex;
+	justify-content: flex-end;
+	align-items: flex-end;
+	margin-bottom: 5px;
+	font-size: 8px;
+}
+
+.toggleSwitch{
+	position: relative;
+	display: inline-block;
+	width: 32px;
+	height: 18px;
+}
+
+.toggleSwitch input{
+	opacity: 0;
+	height: 0;
+	width: 0;
+}
+
+.toggleSlider{
+	position: absolute;
+	cursor: pointer;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background-color: #FFEEAD;
+	-webkit-transition: 400ms;
+	transition: 400ms;
+}
+
+.toggleSlider:before{
+	position: absolute;
+	content: "";
+	height: 14px;
+	width: 14px;
+	top: 2px;
+	left: 2px;
+	background-color: #D9534F;
+	-webkit-transition: 400ms;
+	transition: 400ms;
+}
+
+input:checked + .toggleSlider:before{
+	background-color: #FFFFFF;
+}
+
+input:checked + .toggleSlider {
+	background-color: black;
+}
+
+input:checked + .toggleSlider:before {
+	-webkit-transform: translateX(14px);
+	-ms-transform: translateX(14px);
+	transform: translateX(14px);
+}
+
+.add-photo-loading-div-wrappper{
+	height: 20px;
+	width: 500px;
+	background-color: #FFEEAD;
+	margin-bottom: 20px;
+	display: none;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+	z-index: 1;
+	letter-spacing: 20px;
+	font-size: 12px;
+	border: 1px solid #D9534F;
+}
+
+.add-photo-loading-div-wrappper span{
+	z-index: 3;
+}
+
+.add-photo-loading-div-bar{
+	position: absolute;
+	height: 100%;
+	width: 50px;
+	background-color: #D9534F;
+	left: 0px;
+	color: #FFAD60;
+	z-index: 2;
+}
+
+*{
+	/*border: 1px solid lightblue;*/
+}
+
+/*
+	TODO
+
+	- Edit info na Profile Screen
+	- Tri pikice nad vsako fotografijo z možnostjo Report in Delete (če je authorID === userID)
+	- Naloži fotografijo v Firestore v slabši kvaliteti.
+
+*/
