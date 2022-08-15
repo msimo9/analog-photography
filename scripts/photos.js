@@ -1,6 +1,8 @@
 import {auth, db, storage} from './firebase.js';
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.9.1/firebase-auth.js";
-import {collection, getDocs, doc, updateDoc, increment, arrayUnion, arrayRemove, getDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.9.1/firebase-firestore.js";
+import {collection, getDocs, doc, updateDoc, increment, arrayUnion, arrayRemove, getDoc, deleteDoc, addDoc, setDoc } from "https://www.gstatic.com/firebasejs/9.9.1/firebase-firestore.js";
+
+import {customAlertMessage} from "./customAlertMessage.js";
 
 let userID = "";
 let sortByOption = "Newest";
@@ -36,8 +38,13 @@ const getUserData = async() =>{
     likedPhotos = userData.likedPhotos;
 }
 
-const reportPhoto = (photoID) =>{
-
+const reportPhoto = async(photoID, authorID) =>{
+    await setDoc(doc(db, "reportedPhotos", photoID.toString()), {
+        reportedPhotoID: photoID,
+        reportedUserID: authorID,
+        reportByID: userID,
+    });
+    customAlertMessage("Report sent!", 3);
 }
 
 const deletePhoto = async(photoID) =>{
@@ -224,7 +231,7 @@ const renderPhotos = () =>{
         reportButton.innerText = "Report";
         deleteButton.innerText = "Delete";
 
-        reportButton.addEventListener("click", ()=>{reportPhoto(item.timeUploaded)});
+        reportButton.addEventListener("click", ()=>{reportPhoto(item.timeUploaded, item.userID)});
         deleteButton.addEventListener("click", ()=>{deletePhoto(item.timeUploaded); threeDotsContainer.remove()});
 
         threeDotsSubmenu.appendChild(reportButton);

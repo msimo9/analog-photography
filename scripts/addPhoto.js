@@ -2,6 +2,7 @@ import {auth, db, storage} from './firebase.js';
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.9.1/firebase-auth.js";
 import {doc, setDoc, getDoc, addDoc, collection} from "https://www.gstatic.com/firebasejs/9.9.1/firebase-firestore.js";
 import {ref, uploadString, getDownloadURL} from "https://www.gstatic.com/firebasejs/9.9.1/firebase-storage.js";
+import {customAlertMessage} from "./customAlertMessage.js";
 
 let userID = "";
 let photoInformation = {
@@ -12,6 +13,7 @@ let photoInformation = {
 }
 let lens = "";
 let readerResult = undefined;
+let previewReaderResult = undefined;
 let grayscaleValue = false;
 
 onAuthStateChanged(auth, (user) => {
@@ -28,8 +30,11 @@ onAuthStateChanged(auth, (user) => {
 const resetPage = () => {
     setTimeout(()=>{
         document.getElementById("add-photo-loading-div-wrappper").style.display = "none";
-        window.location.reload();
-    }, 3000)
+        customAlertMessage("Photo uploaded!", 2);
+        setTimeout(()=>{
+            window.location.reload();
+        }, 2000);
+    }, 3000);
 }
 
 const addPhotoInfo = async(url, time) => {
@@ -75,6 +80,39 @@ const handleFilePicker = () =>{
         reader.addEventListener("load", function () {
             readerResult = reader.result;
             document.getElementById("add-photo-preview-image").setAttribute("src", reader.result);
+
+            let image = new Image();
+            image.src = reader.result;
+            image.addEventListener("load", (e)=>{
+                const canvas = document.createElement("canvas");
+                let resizingFactor = 1;
+                let imageWidth = image.width;
+                let imageHeight = image.height;
+                while (true){
+                    if(
+                        imageHeight * resizingFactor <= 300
+                        ||
+                        imageWidth * resizingFactor <= 300
+                        ||
+                        resizingFactor <= 0.2
+                    ){
+                            break;
+                        }else{
+                            resizingFactor -= 0.1;
+                        }
+                }
+
+                imageWidth *= resizingFactor;
+                imageHeight *= resizingFactor;
+
+                canvas.width = imageWidth;
+                canvas.height = imageHeight;
+
+                canvas.getContext("2d").drawImage(image, 0, 0, imageWidth, imageHeight);
+
+                const imageURL = canvas.toDataURL("image/jpeg");
+                previewReaderResult = imageURL;
+            });
         }, false);
         if (file) {
             reader.readAsDataURL(file);
@@ -311,7 +349,7 @@ const renderInputFields = () => {
         <span>Submit</span>
     `;
     submitButton.addEventListener("click", ()=>{
-        uploadPhoto(readerResult);
+        uploadPhoto(previewReaderResult);
         window.scrollTo(0,0);
     });
     document.getElementById("main-content").appendChild(submitButton);

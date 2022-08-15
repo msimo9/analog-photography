@@ -750,6 +750,110 @@ input:checked + .toggleSlider:before {
 	z-index: 2;
 }
 
+#modal-pop-up-message{
+	position: fixed;
+	height: 100px;
+	width: 300px;
+	background-color: #D9534F;
+	border: 3px solid #FFEEAD;
+	border-bottom-left-radius: 15px;
+	border-bottom-right-radius: 15px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	animation: slide-down 500ms linear;
+	top: 0;
+	font-size: 12px;
+}
+
+@keyframes slide-down {
+	from {top: -100px;}
+	to {top: 0px;}
+}
+
+@keyframes slide-up {
+	from {top: 0px;}
+	to {top: -100px;}
+}
+
+#modal-pop-up-edit{
+	position: fixed;
+	height: 300px;
+	width: 200px;
+	background-color: #96CEB4;
+	border: 3px solid #D9534F;
+	box-shadow: 15px 15px 5000px 150px #FFAD60;
+	display: flex;
+	justify-content: center;
+	animation: show-modal 500ms linear;
+	top: 25%;
+	font-size: 12px;
+	z-index: 99;
+	flex-direction: column;
+}
+
+@keyframes show-modal {
+	from {
+		opacity: 0;
+	}
+	to{
+		opacity: 1;
+	}
+}
+
+@keyframes hide-modal {
+	from {
+		opacity: 1;
+	}
+	to{
+		opacity: 0;
+	}
+}
+
+#modal-pop-up-edit ion-icon{
+	position: absolute;
+	right: 6px;
+	top: 6px;
+}
+
+#modal-pop-up-edit ion-icon:hover{
+	cursor: pointer;
+}
+
+#modal-pop-up-edit input{
+	margin: 6px 0px 12px 0px;
+	width: 80%;
+	margin-left: 10%;
+}
+
+#modal-pop-up-edit span{
+	margin-left: 10%;
+}
+
+.submit-edited-info-wrapper{
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: absolute;
+	bottom: 10px;
+}
+
+.submit-edited-info-wrapper div{
+	width: 50%;
+	height: 40px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: #D9534F;
+	border: 2px solid #FFEEAD;
+	transition: all 500ms linear;
+}
+
+.submit-edited-info-wrapper div:hover{
+	cursor: pointer;
+}
+
 *{
 	/*border: 1px solid lightblue;*/
 }
@@ -758,7 +862,5 @@ input:checked + .toggleSlider:before {
 	TODO
 
 	- Edit info na Profile Screen
-	- Tri pikice nad vsako fotografijo z možnostjo Report in Delete (če je authorID === userID)
-	- Naloži fotografijo v Firestore v slabši kvaliteti.
 
 */

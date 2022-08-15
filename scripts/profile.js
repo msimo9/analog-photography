@@ -1,14 +1,17 @@
 import { onAuthStateChanged, createUserWithEmailAndPassword, signOut, signInWithEmailAndPassword  } from "https://www.gstatic.com/firebasejs/9.9.1/firebase-auth.js";
-import {doc, setDoc, getDoc} from "https://www.gstatic.com/firebasejs/9.9.1/firebase-firestore.js";
+import {doc, setDoc, getDoc, updateDoc} from "https://www.gstatic.com/firebasejs/9.9.1/firebase-firestore.js";
 import {ref, uploadString, getDownloadURL} from "https://www.gstatic.com/firebasejs/9.9.1/firebase-storage.js";
 import {auth, db, storage} from './firebase.js';
+
+
+let userID = "";
 
 
 onAuthStateChanged(auth, (user) => {
     document.getElementById("main-content").innerHTML = "";
     document.getElementById("loading-spinner").style.display = "flex";
     if (user) {
-        const userID = user.uid;
+        userID = user.uid;
         console.log("user is logged in!");
         getUserData(userID);
     } else {
@@ -94,6 +97,14 @@ const getUserData = async(userID) => {
     }
 }
 
+const updateUserInfo = async(newData) =>{
+    const updateRef = doc(db, "userData", userID.toString());
+    await updateDoc(updateRef, {
+      email: newData.email,
+      instagramHandle: newData.instagramHandle
+    });
+}
+
 const renderProfileInfo = (user, userID, imageURL) => {
 
     //FUNCTIONS
@@ -157,20 +168,70 @@ const renderProfileInfo = (user, userID, imageURL) => {
     //EDIT INFO
 
 
-    //SIGN OUT BUTTON
-
     const actionButton1 = document.createElement("div");
     actionButton1.classList.add("profile-fields-action-button");
     actionButton1.addEventListener("click", ()=>{
-        signOut(auth).then(() => {
-            // Sign-out successful.
-          }).catch((error) => {
-            // An error happened.
-          });
-          
+        const editInfoModal = document.createElement("div");
+        editInfoModal.setAttribute("id", "modal-pop-up-edit");
+        const windowHeight = window.innerHeight;
+        console.log(windowHeight);
+        editInfoModal.style.top = Math.floor(windowHeight/10)+"px";
+
+        let editedUserData = {
+            email: "",
+            instagramHandle: ""
+        }       
+
+        Object.keys(editedUserData).map((item, index) => {
+            const inputFieldText = document.createElement("span");
+            inputFieldText.innerText = index === 0 ? "New Email" : "New Instagram Handle";
+            const inputField = document.createElement("input");
+            inputField.addEventListener("keyup", (e)=>{
+                index === 0 ?
+                    editedUserData["email"] = e.target.value
+                :
+                    editedUserData["instagramHandle"] = e.target.value
+                console.log("edited user data: ",editedUserData);
+            })
+            editInfoModal.appendChild(inputFieldText);
+            editInfoModal.appendChild(inputField);
+        });
+
+        const submitEditedInfoWrapper = document.createElement("div");
+        submitEditedInfoWrapper.classList.add("submit-edited-info-wrapper");
+        
+        const submitEditedInfo = document.createElement("div");
+        submitEditedInfo.innerText = "Submit";
+        submitEditedInfo.addEventListener("click", ()=>{
+            updateUserInfo(editedUserData);
+            editInfoModal.style.animation = "hide-modal 500ms linear";
+            editInfoModal.style.opacity = "0";
+            setTimeout(()=>{
+                editInfoModal.remove();
+            }, 500);
+        });
+        submitEditedInfoWrapper.appendChild(submitEditedInfo);
+        editInfoModal.appendChild(submitEditedInfoWrapper);
+
+        const closeModal = document.createElement("ion-icon");
+        closeModal.setAttribute("name", "close-outline");
+        closeModal.addEventListener("click", ()=>{
+            editInfoModal.style.animation = "hide-modal 500ms linear";
+            editInfoModal.style.opacity = "0";
+            setTimeout(()=>{
+                editInfoModal.remove();
+            }, 500);
+        });
+        editInfoModal.appendChild(closeModal);
+        document.getElementById("main-content").style.opacity = 1;
+        document.getElementById("main-content").appendChild(editInfoModal);
     });
+
+
     actionButton1.innerText = "Edit info";
 
+    //SIGN OUT BUTTON
+    
     const actionButton2 = document.createElement("div");
     actionButton2.classList.add("profile-fields-action-button");
     actionButton2.addEventListener("click", ()=>{
